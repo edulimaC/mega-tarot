@@ -1163,19 +1163,74 @@ a {
   font: 18px/1.55 Georgia, serif;
 }
 .payment-offer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
+  position: relative;
+  display: block;
   max-width: 520px;
-  padding: 16px 0;
+  margin-top: 4px;
+  padding: 19px 22px 22px;
+  overflow: hidden;
   border-top: 1px solid #c8a26452;
   border-bottom: 1px solid #c8a26452;
-  color: #bbaab2;
-  font: 13px/1.4 Arial, sans-serif;
-  letter-spacing: .05em;
+  background: linear-gradient(120deg, #1a101dcc, #2b1a2d80 48%, #130b18dc);
+  box-shadow: inset 0 1px #f4d89418, 0 14px 40px #05030835;
+  text-align: center;
 }
-.payment-offer strong { flex: 0 0 auto; color: #f1d39a; font: italic 26px Georgia, serif; }
+.payment-offer::before,
+.payment-offer::after {
+  position: absolute;
+  top: 50%;
+  color: #d8ad66;
+  font-size: 12px;
+  transform: translateY(-50%);
+  opacity: .8;
+}
+.payment-offer::before { content: "✦"; left: 12px; }
+.payment-offer::after { content: "✦"; right: 12px; }
+.payment-offer-name {
+  display: block;
+  margin-bottom: 13px;
+  color: #cbbac0;
+  font: 11px/1.45 Arial, sans-serif;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.payment-price {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+.payment-price-old {
+  color: #bbaab2;
+  font: 16px/1.2 Georgia, serif;
+}
+.payment-price-old s {
+  color: #d3b9ae;
+  text-decoration-color: #db8f7c;
+  text-decoration-thickness: 2px;
+}
+.payment-price-label {
+  margin-top: 10px;
+  color: #79c998;
+  font: 600 11px/1.2 Arial, sans-serif;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.payment-price strong {
+  display: block;
+  margin-top: 7px;
+  color: #72d6a0;
+  font: italic 400 clamp(48px, 6vw, 76px)/.9 Georgia, serif;
+  letter-spacing: -.055em;
+  text-shadow: 0 0 12px #72d6a055, 0 0 34px #4cae7b2b;
+}
+.payment-price-note {
+  margin-top: 13px;
+  color: #d8ad66;
+  font: 10px/1.2 Arial, sans-serif;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
 .payment-panel {
   position: relative;
   display: flex;
@@ -1280,8 +1335,10 @@ a {
   .payment-shell { width: min(100% - 28px, 390px); }
   .payment-copy h1 { font-size: 46px; }
   .payment-copy > p:not(.eyebrow-light) { font-size: 16px; }
-  .payment-offer { align-items: flex-start; flex-direction: column; gap: 7px; text-align: left; }
-  .payment-offer strong { font-size: 24px; }
+  .payment-offer { padding: 18px 18px 21px; text-align: center; }
+  .payment-offer-name { font-size: 10px; }
+  .payment-price-old { font-size: 15px; }
+  .payment-price strong { font-size: 56px; }
   .payment-panel { padding: 24px 18px 22px; }
 }
 

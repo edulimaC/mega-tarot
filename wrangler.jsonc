@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "mega-tarot",
+  "main": "./worker/index.ts",
+  "compatibility_date": "2026-08-28",
+  "compatibility_flags": ["nodejs_compat"],
+  "keep_vars": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mega-tarot-db",
+      "database_id": "16f0e4fb-45ab-49a6-a10c-177cd54dcf5a"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

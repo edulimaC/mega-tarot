@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { trackPurchaseCompleted } from "../../lib/marketing-pixels";
 
 type Signal =
   | "conexao"
@@ -374,6 +375,12 @@ export default function ResultPage() {
         }
 
         const validReadingId = profiles[payload.readingId] ? payload.readingId : requestedId;
+        trackPurchaseCompleted({
+          orderId: currentOrderId,
+          readingId: validReadingId,
+          offerName: payload.offerName,
+          amount: payload.amount,
+        });
         setReadingId(validReadingId);
         if (Array.isArray(payload.answers)) {
           setAnswers(payload.answers.filter((answer: unknown): answer is string => typeof answer === "string"));

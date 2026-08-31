@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { trackFormCompleted, trackReadingViewed } from "../../lib/marketing-pixels";
 
 const themes: Record<string, { title: string; label: string; intro: string }> = {
   feelings: { label: "Sentimentos ocultos", title: "O que ele sente, mas não demonstra?", intro: "Uma leitura para separar intuição, desejo e aquilo que ficou preso nas entrelinhas." },
@@ -38,6 +39,13 @@ export default function ReadingPage() {
   const [checkoutError, setCheckoutError] = useState("");
   const answered = answers.filter(Boolean).length;
   const progress = Math.round((answered / 12) * 100);
+
+  useEffect(() => {
+    const currentId = new URLSearchParams(window.location.search).get("id") || "love";
+    const currentTheme = themes[currentId] || themes.love;
+    trackReadingViewed({ readingId: currentId, readingName: currentTheme.label });
+  }, []);
+
   async function beginReveal() {
     if (answered < 12 || loading) return;
     setCheckoutError("");
@@ -61,6 +69,12 @@ export default function ReadingPage() {
       ]);
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(typeof payload.error === "string" ? payload.error : "Não foi possível preparar o pagamento.");
+
+      trackFormCompleted({
+        orderId: payload.orderId,
+        readingId: id,
+        readingName: theme.label,
+      });
 
       window.localStorage.setItem("mega-tarot-reading", JSON.stringify({ id, answers }));
       window.location.assign(`/pagamento?orderId=${encodeURIComponent(payload.orderId)}&id=${encodeURIComponent(id)}`);

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { trackCheckoutStarted, trackPurchaseCompleted } from "../../lib/marketing-pixels";
 
 type PaymentData = {
   orderId: string;
@@ -56,7 +57,21 @@ export default function PaymentPage() {
         if (!response.ok) throw new Error(typeof payload.error === "string" ? payload.error : "Não foi possível consultar o Pix.");
         if (!active) return;
         setPayment(payload as PaymentData);
+        if (payload.status === "pending") {
+          trackCheckoutStarted({
+            orderId: currentOrderId,
+            readingId: payload.readingId || currentReadingId,
+            offerName: payload.offerName,
+            amount: payload.amount,
+          });
+        }
         if (payload.status === "paid" && !redirecting.current) {
+          trackPurchaseCompleted({
+            orderId: currentOrderId,
+            readingId: payload.readingId || currentReadingId,
+            offerName: payload.offerName,
+            amount: payload.amount,
+          });
           redirecting.current = true;
           window.setTimeout(() => {
             window.location.assign(`/resultado?id=${encodeURIComponent(payload.readingId || currentReadingId)}&orderId=${encodeURIComponent(currentOrderId)}`);

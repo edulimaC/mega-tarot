@@ -36,11 +36,14 @@ function metaPayload(input: ReadingEvent & { offerName?: string; amount?: number
 function tiktokPayload(input: ReadingEvent & { offerName?: string; amount?: number }) {
   const value = input.amount ?? DEFAULT_VALUE;
   const name = input.offerName || input.readingName || CONTENT_NAME;
+  const contentId = `${CONTENT_ID}:${input.readingId}`;
 
   return {
+    content_ids: [contentId],
+    content_name: name,
     contents: [
       {
-        content_id: `${CONTENT_ID}:${input.readingId}`,
+        content_id: contentId,
         content_name: name,
         content_type: "product",
         quantity: 1,
@@ -49,6 +52,7 @@ function tiktokPayload(input: ReadingEvent & { offerName?: string; amount?: numb
     ],
     content_type: "product",
     description: name,
+    quantity: 1,
     value,
     currency: CURRENCY,
   };
@@ -101,11 +105,21 @@ export function trackFormCompleted(input: OrderEvent) {
     sendOnce("meta", "Lead", eventId, () => {
       window.fbq?.("track", "Lead", metaPayload(input), { eventID: eventId });
     });
+
+    const cartEventId = `cart:${input.orderId}`;
+    sendOnce("meta", "AddToCart", cartEventId, () => {
+      window.fbq?.("track", "AddToCart", metaPayload(input), { eventID: cartEventId });
+    });
   }
 
   if (window.ttq?.track) {
     sendOnce("tiktok", "SubmitForm", eventId, () => {
       window.ttq?.track?.("SubmitForm", tiktokPayload(input), { event_id: eventId });
+    });
+
+    const tiktokCartEventId = `cart:${input.orderId}`;
+    sendOnce("tiktok", "AddToCart", tiktokCartEventId, () => {
+      window.ttq?.track?.("AddToCart", tiktokPayload(input), { event_id: tiktokCartEventId });
     });
   }
 }
@@ -136,8 +150,8 @@ export function trackPurchaseCompleted(input: OrderEvent) {
   }
 
   if (window.ttq?.track) {
-    sendOnce("tiktok", "CompletePayment", eventId, () => {
-      window.ttq?.track?.("CompletePayment", tiktokPayload(input), { event_id: eventId });
+    sendOnce("tiktok", "Purchase", eventId, () => {
+      window.ttq?.track?.("Purchase", tiktokPayload(input), { event_id: eventId });
     });
   }
 }

@@ -39,6 +39,7 @@ function tiktokPayload(input: ReadingEvent & { offerName?: string; amount?: numb
   const contentId = `${CONTENT_ID}:${input.readingId}`;
 
   return {
+    content_id: contentId,
     content_ids: [contentId],
     content_name: name,
     contents: [
